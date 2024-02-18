@@ -1,0 +1,39 @@
+class RecommendationSystem:
+    def __init__(self):
+        self.preferences = {}
+
+    def add_preference(self, user, item, rating):
+        if user not in self.preferences:
+            self.preferences[user] = {}
+        self.preferences[user][item] = rating
+
+    def recommend(self, user):
+        recommendations = {}
+        user_preferences = self.preferences.get(user, {})
+        for other_user, preferences in self.preferences.items():
+            if other_user != user:
+                for item, rating in preferences.items():
+                    if item not in user_preferences:
+                        recommendations[item] = recommendations.get(item, 0) + rating
+
+        return sorted(recommendations.items(), key=lambda x: x[1], reverse=True)
+
+
+# Example usage:
+rs = RecommendationSystem()
+
+# Add some preferences
+rs.add_preference("Alice", "Movie1", 5)
+rs.add_preference("Alice", "Movie2", 4)
+rs.add_preference("Bob", "Movie1", 3)
+rs.add_preference("Bob", "Movie3", 5)
+rs.add_preference("Charlie", "Movie2", 4)
+rs.add_preference("Charlie", "Movie3", 4)
+
+# Recommend items for a user
+user = "Alice"
+recommendations = rs.recommend(user)
+print(f"Recommendations for {user}:")
+for item, score in recommendations:
+    print(f"Item: {item}, Score: {score}")
+
